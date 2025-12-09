@@ -92,10 +92,12 @@ Forecast: {period['detailedForecast']}
 
 def main():
     import os
-    # Get port from environment (Railway sets this automatically)
-    port = int(os.environ.get('PORT', 8000))
+
+    # Set host to 0.0.0.0 for Railway (required for external access)
+    os.environ.setdefault('HOST', '0.0.0.0')
     
-    # Run with SSE transport for HTTP access
+    # Railway sets PORT automatically
+    # Run with SSE transport
     mcp.run(transport='sse', mount_path='/sse')
 
 if __name__ == "__main__":
