@@ -98,7 +98,7 @@ Forecast: {period['detailedForecast']}
 
 
 def main():
-    mcp.run(transport='sse', mount_path='/sse')
+    mcp.run(transport='streamable-http', mount_path='/mcp')
 
 if __name__ == "__main__":
     main()
