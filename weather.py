@@ -91,8 +91,12 @@ Forecast: {period['detailedForecast']}
 
 
 def main():
-    # Initialize and run the server
-    mcp.run(transport='stdio')
+    import os
+    # Get port from environment (Railway sets this automatically)
+    port = int(os.environ.get('PORT', 8000))
+    
+    # Run with SSE transport for HTTP access
+    mcp.run(transport='sse', mount_path='/sse')
 
 if __name__ == "__main__":
     main()
