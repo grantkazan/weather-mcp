@@ -97,6 +97,39 @@ Forecast: {period['detailedForecast']}
     return "\n---\n".join(forecasts)
 
 
+# end weather logic
+
+# hospital logic
+
+@mcp.tool()
+async def get_doctors() -> str:
+    """Get list of available doctors at the hospital.
+    
+    Returns information about doctors including their names and specialties.
+    """
+    url = "https://telnyx-assignment-production.up.railway.app/doctors"
+    
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(url, timeout=30.0)
+            response.raise_for_status()
+            doctors = response.json()
+            
+            if not doctors:
+                return "No doctors found in the system."
+            
+            # Format the doctors list
+            doctor_list = []
+            for doctor in doctors:
+                doctor_info = f"Dr. {doctor['name']} - Specialty: {doctor['specialty']}"
+                doctor_list.append(doctor_info)
+            
+            return "Available doctors:\n" + "\n".join(doctor_list)
+            
+        except Exception as e:
+            return f"Unable to fetch doctor information: {str(e)}"
+
+
 def main():
     mcp.run(transport='streamable-http', mount_path='/mcp')
 
