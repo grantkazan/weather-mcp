@@ -3,7 +3,14 @@ import httpx
 from mcp.server.fastmcp import FastMCP
 
 # Initialize FastMCP server
-mcp = FastMCP("weather")
+
+import os
+
+mcp = FastMCP(
+    "weather",
+    host="0.0.0.0",  # Bind to all interfaces for Railway
+    port=int(os.environ.get("PORT", 8000))  # Use Railway's assigned port
+)
 
 # Constants
 NWS_API_BASE = "https://api.weather.gov"
@@ -91,21 +98,6 @@ Forecast: {period['detailedForecast']}
 
 
 def main():
-    import os
-    
-    # Monkey-patch the host before FastMCP starts Uvicorn
-    # This forces it to bind to 0.0.0.0 instead of 127.0.0.1
-    import uvicorn.config
-    original_init = uvicorn.Config.__init__
-    
-    def patched_init(self, *args, **kwargs):
-        kwargs['host'] = '0.0.0.0'
-        kwargs['port'] = int(os.environ.get('PORT', 8000))
-        original_init(self, *args, **kwargs)
-    
-    uvicorn.Config.__init__ = patched_init
-    
-    # Now run FastMCP normally
     mcp.run(transport='sse', mount_path='/sse')
 
 if __name__ == "__main__":
