@@ -129,6 +129,10 @@ async def get_doctors() -> str:
         except Exception as e:
             return f"Unable to fetch doctor information: {str(e)}"
 
+# add remaining logic once they've been tested locally
+
+
+# end rest of local MCP methods
 
 def main():
     mcp.run(transport='streamable-http', mount_path='/mcp')
